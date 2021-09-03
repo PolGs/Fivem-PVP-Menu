@@ -3,6 +3,8 @@
 ## Requirements:
 ### NativeUI:
 https://github.com/FrazzIe/NativeUILua
+### RPDeath (optional):
+https://github.com/TheStonedTurtle/FiveM-RPDeath
 ### Screenshots
 
 ![20210903042003_1](https://user-images.githubusercontent.com/19478700/131941304-6b4b25d1-fd6c-48c2-a1c2-92eef9936b6b.jpg)
