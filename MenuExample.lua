@@ -1,15 +1,29 @@
 _menuPool = NativeUI.CreatePool()
-mainMenu = NativeUI.CreateMenu("La Triada","~b~Menu de entrenamiento(by polgs)")
+mainMenu = NativeUI.CreateMenu("La Triada","PvP Menu (by polgs)")
 _menuPool:Add(mainMenu)
+_menuPool:MouseControlsEnabled (false)
+_menuPool:MouseEdgeEnabled (false)
+_menuPool:ControlDisablingEnabled(false)
 
 function FirstItem(menu)
     local spawnPos = vector3(686.245, 577.950, 130.461)
-    local btn_rojos = NativeUI.CreateItem("~b~Equipación Azul","~b~Outfit Azul, Armas y Chaleco")
-    local click2 = NativeUI.CreateItem("~r~Equipación Roja","~r~Outfit Rojo, Armas y Chaleco")
-    local click3 = NativeUI.CreateItem("~g~Teleport Mapa 1","~g~Ir al mapa 1")
+
+    local btn_rojos = NativeUI.CreateItem("~b~Equipación Azul","Outfit Azul, Armas y Chaleco")
+    local click2 = NativeUI.CreateItem("~r~Equipación Roja","~Outfit Rojo, Armas y Chaleco")
+    local click3 = NativeUI.CreateItem("~y~Teleport Mapa 1","Ir al mapa 1")
+    local btn_heal = NativeUI.CreateItem("~g~Heal","Heal your character")
+    local btn_baller = NativeUI.CreateItem("~y~Baller","Spawn Baller in front of you")
+    local btn_scarab = NativeUI.CreateItem("~y~Scarab","Spawn Scarab in front of you")
+    local btn_dv = NativeUI.CreateItem("~y~Delete Vehicle","Deletes vehicle near you")
+
     menu:AddItem(btn_rojos)
     menu:AddItem(click2)
+    menu:AddItem(btn_heal)
+    menu:AddItem(btn_scarab)
+    menu:AddItem(btn_baller)
+    
     menu:AddItem(click3)
+
 
     menu.OnItemSelect = function(sender, item, index)
         if item == btn_rojos then
@@ -37,6 +51,14 @@ function FirstItem(menu)
             GiveWeaponToPed(ped, weapon, 250, false, false)
             local weapon = GetHashKey("WEAPON_CARBINERIFLE")
             GiveWeaponToPed(ped, weapon, 250, false, false)
+            local weapon = GetHashKey("weapon_appistol")
+            GiveWeaponToPed(ped, weapon, 0, false, false)
+            local weapon = GetHashKey("weapon_advancedrifle")
+            GiveWeaponToPed(ped, weapon, 0, false, false)
+            local weapon = GetHashKey("weapon_smg")
+            GiveWeaponToPed(ped, weapon, 0, false, false)
+            local weapon = GetHashKey("weapon_specialcarbine")
+            GiveWeaponToPed(ped, weapon, 0, false, false)
             AddArmourToPed(ped,100)
             SetPedArmour(ped, 100)
             SetPedComponentVariation(ped, 9, 7, 1, 0)
@@ -74,6 +96,14 @@ function FirstItem(menu)
             GiveWeaponToPed(ped, weapon, 250, false, false)
             local weapon = GetHashKey("WEAPON_CARBINERIFLE")
             GiveWeaponToPed(ped, weapon, 250, false, false)
+            local weapon = GetHashKey("weapon_appistol")
+            GiveWeaponToPed(ped, weapon, 0, false, false)
+            local weapon = GetHashKey("weapon_advancedrifle")
+            GiveWeaponToPed(ped, weapon, 0, false, false)
+            local weapon = GetHashKey("weapon_smg")
+            GiveWeaponToPed(ped, weapon, 0, false, false)
+            local weapon = GetHashKey("weapon_specialcarbine")
+            GiveWeaponToPed(ped, weapon, 0, false, false)
             AddArmourToPed(ped,100)
             SetPedArmour(ped, 100)
             SetPedComponentVariation(ped, 9, 7, 1, 0)
@@ -106,20 +136,56 @@ function FirstItem(menu)
             notify("Teleported")
 
             local ped = GetPlayerPed(PlayerId())
-            local weapon = GetHashKey("WEAPON_COMBATPISTOL")
-            GiveWeaponToPed(ped, weapon, 230, false, false)
-            local weapon = GetHashKey("WEAPON_COMBATPDW")
-            GiveWeaponToPed(ped, weapon, 250, false, false)
-            local weapon = GetHashKey("WEAPON_CARBINERIFLE")
-            GiveWeaponToPed(ped, weapon, 250, false, false)
-            AddArmourToPed(ped,100)
-            SetPedArmour(ped, 100)
             SetPedComponentVariation(ped, 9, 7, 1, 0)
             SetPedComponentVariation(ped, 11, 15, 0, 0)
             SetPedComponentVariation(ped, 3, 1, 0, 0)
             SetPedComponentVariation(ped, 11, 221, 20, 0)
             SetPedComponentVariation(ped, 4, 97, 1,0)
+            SetPedComponentVariation(ped, 1, 35,0,0)
+            SetPedComponentVariation(ped, 8, 15,0,0)
+            SetPedComponentVariation(ped, 6, 24,0,0)
         end
+
+        if item == btn_heal then
+            SetEntityHealth(GetPlayerPed(-1), 200)
+        end
+
+        if item == btn_baller then
+            local spawnPos = GetEntityCoords(GetPlayerPed(PlayerId()))
+            vehiclehash = GetHashKey("baller5")
+            RequestModel(vehiclehash)
+            Citizen.CreateThread(function() 
+                local waiting = 0
+                while not HasModelLoaded(vehiclehash) do
+                    waiting = waiting + 100
+                    Citizen.Wait(100)
+                    if waiting > 5000 then
+                        ShowNotification("~r~Could not load the vehicle model in time, a crash was prevented.")
+                        break
+                    end
+                end
+                CreateVehicle(vehiclehash, spawnPos.x, spawnPos.y + 3, spawnPos.z, GetEntityHeading(GetPlayerPed(PlayerId()))+90, 1, 0)
+            end)
+        end
+
+        if item == btn_scarab then
+            local spawnPos = GetEntityCoords(GetPlayerPed(PlayerId()))
+            vehiclehash = GetHashKey("scarab3")
+            RequestModel(vehiclehash)
+            Citizen.CreateThread(function() 
+                local waiting = 0
+                while not HasModelLoaded(vehiclehash) do
+                    waiting = waiting + 100
+                    Citizen.Wait(100)
+                    if waiting > 5000 then
+                        ShowNotification("~r~Could not load the vehicle model in time, a crash was prevented.")
+                        break
+                    end
+                end
+                CreateVehicle(vehiclehash, spawnPos.x, spawnPos.y + 3, spawnPos.z, GetEntityHeading(GetPlayerPed(PlayerId()))+90, 1, 0)
+            end)
+        end
+
     end
 end
 
